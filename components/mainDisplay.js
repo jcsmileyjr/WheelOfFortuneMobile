@@ -18,7 +18,6 @@ export default function MainDisplay(props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "pink",
   },
   displayLetters:{
     letterSpacing: 2,

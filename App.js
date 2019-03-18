@@ -4,6 +4,7 @@ import { Constants } from 'expo';
 
 import MainDisplay from './components/mainDisplay.js';
 import UsedLetters  from './components/usedLetters.js';
+import SpinWheel from './components/spinWheel';
 
 
 let displayPhrase = ""  //global variable to hold updated phrase with known letters and unknown letters with "_". Used in the createStartDisplay() to help start the web app.
@@ -80,6 +81,7 @@ export default class App extends React.Component {
         </View>
         <MainDisplay displayLetters= {displayPhrase} />
         <UsedLetters usedLetters = {this.state.usedLetters} />
+        <SpinWheel usedLetters = {this.state.usedLetters} />
       </View>
     );
   }
@@ -95,7 +97,6 @@ const styles = StyleSheet.create({
   appTitleStyle: {
     flex: 1,
     alignItems:"center", //center the text
-    backgroundColor: "lightgreen",
   },
   wofTitle: {
     fontSize: 24,

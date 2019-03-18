@@ -18,7 +18,6 @@ export default function UsedLetters(props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "yellow",
   },
   displayLetters:{
     letterSpacing: 2,
