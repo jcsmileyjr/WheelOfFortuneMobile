@@ -1,8 +1,8 @@
 {
   "expo": {
     "name": "wheel-of-fortune",
-    "description": "No description",
-    "slug": "snack-B1OALQjvN",
+    "description": "Clone of the iconic Wheel of Fortune game for learning React Native",
+    "slug": "snack-HyMpj_nwN",
     "privacy": "unlisted",
     "sdkVersion": "32.0.0",
     "version": "1.0.0",

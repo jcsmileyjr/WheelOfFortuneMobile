@@ -1,7 +1,7 @@
 {
   "name": "wheel-of-fortune",
   "version": "0.0.0",
-  "description": "No description",
+  "description": "Clone of the iconic Wheel of Fortune game for learning React Native",
   "author": null,
   "private": true,
   "main": "node_modules/expo/AppEntry.js",
