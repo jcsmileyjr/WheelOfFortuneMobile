@@ -15,6 +15,7 @@ export default class SpinWheel extends React.Component {
     return(
       <View style={styles.container}>
         <TouchableHighlight
+          disabled = {this.props.disableSpinwheel}
           onPress={this.props.getRandomAmount} 
           style={styles.wheel}>
           <Text style={styles.awardText}>{this.props.rewardAmount}</Text>

@@ -21,6 +21,7 @@ export default class App extends React.Component {
       usedLetters: "No Unused Letters",//string of letters already used by player
       currentAwardAmount: 0, // the current random award amount the player can win for each letter they get correct
       currentScore: 0, //the current accumulation of the player score
+      disableSpinWheel: false, //disable spin wheel when after player spin it
     }
   }
 
@@ -28,10 +29,24 @@ export default class App extends React.Component {
     this.createStartDisplay();
   }
 
+  //method use in the createRandomRewardAmount() in the spinWheel component to disable the spin wheel after the player push the button and get a ramdom reward amount
+  disableWheel = () => {
+      this.setState(previousState => (
+        { disableSpinWheel: !previousState.disableSpinWheel }
+      )) 
+  }
+
+  //method use in the spinWheel compontent to get a random reward amount for the player between 100 and 1000.
   createRandomRewardAmount = () => {
     const randomAmount = Math.floor(Math.random() * 11) * 100;
-    this.setState({currentAwardAmount: randomAmount})
-    console.log("This is the random amount " + randomAmount);
+    
+    //gets a new random amount if the spin wheel is not disabled.
+    if(!this.state.disableSpinWheel){
+      this.setState(previousState => (
+        { currentAwardAmount: randomAmount }
+      ))      
+      this.disableWheel();//disable the spin wheel after the user press the button
+    }   
   }
 
   //method to update the state with the player choice then update the UsedLetters component
@@ -96,6 +111,7 @@ export default class App extends React.Component {
         <MainDisplay displayLetters= {displayPhrase} />
         <UsedLetters usedLetters = {this.state.usedLetters} />
         <SpinWheel 
+          disableSpinWheel = {this.state.disableSpinWheel}
           getRandomAmount = {this.createRandomRewardAmount}
           rewardAmount = {this.state.currentAwardAmount} />
         <PlayerScore score = {this.state.currentScore} />
