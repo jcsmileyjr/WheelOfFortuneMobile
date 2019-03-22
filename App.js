@@ -58,7 +58,12 @@ export default class App extends React.Component {
     let buildArray = [];  //used to build a array of "_"
 
     for(var i=0;i<this.state.mysteryPhrase.length;i++){
-      buildArray.push("_");
+      if(this.state.mysteryPhrase[i] ==" "){
+        buildArray.push(" ");
+      }else {
+        buildArray.push("_");
+      }
+      
     }
 
     //string used to update the guessedPhrase state
