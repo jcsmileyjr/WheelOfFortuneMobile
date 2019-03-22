@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Text, View, StyleSheet } from 'react-native';
+import { Text, View, StyleSheet, TouchableHighlight } from 'react-native';
 import { Constants } from 'expo';
 
 import MainDisplay from './components/mainDisplay.js';
@@ -86,7 +86,7 @@ export default class App extends React.Component {
       <View style={styles.container}>
         <View style={styles.appTitleStyle}>
           <Text style={styles.wofTitle}>Wheel of Fortune</Text>
-          <Text style={styles.ceTitle}>Coding Edition</Text>
+          <Text style={styles.codeEditionTitle}>Coding Edition</Text>
         </View>
         <MainDisplay displayLetters= {displayPhrase} />
         <UsedLetters usedLetters = {this.state.usedLetters} />
@@ -94,6 +94,15 @@ export default class App extends React.Component {
           getRandomAmount = {this.createRandomRewardAmount}
           rewardAmount = {this.state.currentAwardAmount} />
         <PlayerScore score = {this.state.currentScore} />
+        <TouchableHighlight style={styles.buttonStyle}>
+          <Text style={styles.buttonText}>Pick a Letter</Text>
+        </TouchableHighlight>
+        <TouchableHighlight style={styles.buttonStyle}>
+          <Text style={styles.buttonText}>Solve Phrase</Text>
+        </TouchableHighlight>
+        <TouchableHighlight style={styles.buttonStyle}>
+          <Text style={styles.buttonText}>Show Rules</Text>
+        </TouchableHighlight>                
       </View>
     );
   }
@@ -115,8 +124,23 @@ const styles = StyleSheet.create({
     fontWeight: "bolder",
     color: "navy",
   },
-  ceTitle: {
+  codeEditionTitle: {
     fontSize: 14,
     color:"lightblue",
+  },
+  buttonStyle: {
+    backgroundColor: "navy",
+    padding: 10,
+    borderRadius: 10,
+    paddingLeft: 20,
+    paddingRight: 20,
+    marginBottom: 10,
+    width: 225,
+  },
+  buttonText: {
+    color: "white",
+    fontSize: 24,
+    fontWeight: "bolder",
+    textAlign:"center",    
   }
 });
