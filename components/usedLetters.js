@@ -21,6 +21,7 @@ const styles = StyleSheet.create({
   },
   displayLetters:{
     letterSpacing: 2,
-    color: "orange"
+    color: "orange",
+    fontSize: 24,
   }
 });

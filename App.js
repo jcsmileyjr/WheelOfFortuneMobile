@@ -34,26 +34,14 @@ export default class App extends React.Component {
     this.createStartDisplay();
   }
 
-  //method to get player input 
+  //method to get player input, then switch back to the main screen 
   playerPickedALetter = (choice) => {
     this.setState(previousState => ({
       letterChosen: choice,
     }));
-  }
 
-  //method to switch the screen to the PickALetterInput component
-  showPickLetterScreen = ()=>{
-    this.setState(previousState => ({
-      showWheel: false,
-    }));
-
-    this.setState(previousState => ({
-      showPickLetter: true,
-    }));
-
-    this.setState(previousState => ({
-      show: false,
-    }));                            
+    this.updateUsedLetters(choice);
+    this.switchToMainScreen();
   }
 
   //method use in the createRandomRewardAmount() in the spinWheel component to disable the spin wheel after the player push the button and get a ramdom reward amount
@@ -92,7 +80,7 @@ export default class App extends React.Component {
       this.setState({ usedLetters: newLetter });
     } else {
       this.setState(previousState => ({
-        usedLetters: previousState + newLetter,
+        usedLetters: previousState.usedLetters + newLetter,
       }));
     }
   };
@@ -139,6 +127,17 @@ export default class App extends React.Component {
       }));              
   }
 
+  //method to change to MainScreen from InputData container with a method to pick a single letter
+  switchToMainScreen = () => {
+      this.setState(previousState => ({
+        showWheel: true,
+      }));
+
+      this.setState(previousState => ({
+        showPickLetter: false,
+      }));              
+  }  
+
    render() {
     return (
       <View style={styles.container}>
@@ -166,12 +165,6 @@ export default class App extends React.Component {
       </View>
     );
   }
-}
-
-function PlayerPickLetter(props){
-  <View>
-  
-  </View>
 }
 
 function MainScreen(props){
