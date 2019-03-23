@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent:"center",
     //alignSelf: "stretch", //stretch the area of the container across the screen    
-    marginTop: -20,//fix a issue with the inside the "MainScreen" container in that the "show rules" button is half below the screen
+    marginTop: -50,//fix a issue with the inside the "MainScreen" container in that the "Score" component was hidden under the buttons.
   },
   wheel:{
     //flex: 1,

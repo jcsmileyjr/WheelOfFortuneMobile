@@ -18,7 +18,9 @@ export default function PlayerScore(props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: 10,
+    //marginTop: 100,
+    alignItems: "center",
+    justifyContent:"center",    
   },
   scoreStyle: {
     fontSize: 24,

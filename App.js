@@ -203,5 +203,7 @@ const styles = StyleSheet.create({
   },
   mainScreenContainer:{
     flex: 4,
+    display: "flex",
+
   }
 });
