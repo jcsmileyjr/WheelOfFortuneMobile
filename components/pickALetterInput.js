@@ -7,19 +7,22 @@ import {
 
 
 
-export default function MainDisplay(props) {
+export default function PickALetterInput(props) {
   return(
     <View style={styles.container}>
-      <Text style={styles.displayLetters}>{props.displayLetters}</Text>
+      <Text style={styles.scoreStyle}>Score $ {props.score}</Text>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: .5,
+    flex: 1,
+    marginTop: 10,
   },
-  displayLetters:{
-    letterSpacing: 2,
+  scoreStyle: {
+    fontSize: 24,
+    fontWeight: "bolder",
+    color: "navy",
   }
 });

@@ -28,17 +28,18 @@ export default class SpinWheel extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    //flex: 1,
     alignItems: "center",
     justifyContent:"center",
     //alignSelf: "stretch", //stretch the area of the container across the screen    
-
+    marginTop: -20,//fix a issue with the inside the "MainScreen" container in that the "show rules" button is half below the screen
   },
   wheel:{
-    flex: 1,
+    //flex: 1,
     backgroundColor:colors[0],
     borderRadius:100,
-    width: 200, 
+    width: 200,
+    height: 200, 
     alignItems: "center",
     justifyContent:"center",          
   },
@@ -47,18 +48,4 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: "bolder",
   },
-  /*
-  colors: {  
-    10: {backgroundColor: "pink"},
-    20: {backgroundColor: "orange"},
-    30: {backgroundColor: "red"},
-    40: {backgroundColor: "lightblue"},
-    50: {backgroundColor: "skyblue"},
-    60: {backgroundColor: "blue"},
-    70: {backgroundColor: "navy"},
-    80: {backgroundColor: "lightgreen"},
-    90: {backgroundColor: "green"},
-    100: {backgroundColor: "purple"},
-  }
-  */
 });
