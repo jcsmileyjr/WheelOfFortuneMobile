@@ -7,6 +7,7 @@ import UsedLetters from './components/usedLetters.js';
 import SpinWheel from './components/spinWheel';
 import PlayerScore from './components/playerScore';
 import PickALetterInput from './components/pickALetterInput.js';
+import InputData from './components/inputData.js';
 
 let displayPhrase = ''; //global variable to hold updated phrase with known letters and unknown letters with "_". Used in the createStartDisplay() to help start the web app.
 
@@ -25,11 +26,19 @@ export default class App extends React.Component {
       showWheel: true,//show main screen's wheel and buttons, but hide letter input and phrase guessing
       showPickLetter: false,//show picking letter input screen, but hide spin wheel/buttons and phrase guessing
       showSolvePhrase: false,//show solve phrase input screen and button but hide spin wheel and pick letter screens
+      letterChosen: "Bob", //letter chosen via the InputData component
     };
   }
 
   componentDidMount() {
     this.createStartDisplay();
+  }
+
+  //method to get player input 
+  playerPickedALetter = (choice) => {
+    this.setState(previousState => ({
+      letterChosen: choice,
+    }));
   }
 
   //method to switch the screen to the PickALetterInput component
@@ -119,6 +128,17 @@ export default class App extends React.Component {
     //}
   };
 
+  //method to change MainScreen to the InputData container with a method to pick a single letter
+  switchToPickLetterScreen = () => {
+      this.setState(previousState => ({
+        showWheel: false,
+      }));
+
+      this.setState(previousState => ({
+        showPickLetter: true,
+      }));              
+  }
+
    render() {
     return (
       <View style={styles.container}>
@@ -128,18 +148,30 @@ export default class App extends React.Component {
         </View>
         <MainDisplay displayLetters={displayPhrase} />
         <UsedLetters usedLetters={this.state.usedLetters} />
-        
-        <MainScreen
-          disableSpinWheel={this.state.disableSpinWheel}
-          getRandomAmount={this.createRandomRewardAmount}
-          rewardAmount={this.state.currentAwardAmount}
-          score={this.state.currentScore}
-          enable = {this.enableWheel}
-        />
-        
+        {this.state.showWheel &&
+          <MainScreen
+            disableSpinWheel={this.state.disableSpinWheel}
+            getRandomAmount={this.createRandomRewardAmount}
+            rewardAmount={this.state.currentAwardAmount}
+            score={this.state.currentScore}
+            enable = {this.enableWheel}
+            pickLetterScreen ={this.switchToPickLetterScreen}
+          />
+        }
+        {this.state.showPickLetter &&
+          <InputData 
+              letterPicked = {this.playerPickedALetter}
+              numOfLettersAllowed = {1} />
+        }
       </View>
     );
   }
+}
+
+function PlayerPickLetter(props){
+  <View>
+  
+  </View>
 }
 
 function MainScreen(props){
@@ -151,7 +183,9 @@ function MainScreen(props){
         rewardAmount={props.rewardAmount}
       />
       <PlayerScore score={props.score} />
-      <TouchableHighlight style={styles.buttonStyle}>
+      <TouchableHighlight
+        onPress ={props.pickLetterScreen} 
+        style={styles.buttonStyle}>
         <Text style={styles.buttonText}>Pick a Letter</Text>
       </TouchableHighlight>
       <TouchableHighlight style={styles.buttonStyle}>
