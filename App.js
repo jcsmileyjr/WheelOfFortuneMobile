@@ -11,6 +11,8 @@ import InputData from './components/inputData.js';
 
 let displayPhrase = ''; //global variable to hold updated phrase with known letters and unknown letters with "_". Used in the createStartDisplay() to help start the web app.
 
+let workingLetters = ""; //global variable used in the createScreen() to accumulate the player letters
+
 let startUnusedLetterComponent = false;
 
 export default class App extends React.Component {
@@ -39,9 +41,9 @@ export default class App extends React.Component {
     this.setState(previousState => ({
       letterChosen: choice,
     }));
-
     this.updateUsedLetters(choice);
     this.switchToMainScreen();
+    this.createScreen(choice);
   }
 
   //method use in the createRandomRewardAmount() in the spinWheel component to disable the spin wheel after the player push the button and get a ramdom reward amount
@@ -101,19 +103,34 @@ export default class App extends React.Component {
     displayPhrase = buildArray.join(' ');
 
     this.setState({ guessedPhrase: displayPhrase });
+    
   };
 
   //method to create a string to be displayed in the MainDisplay component. It will consist of underline charaters for unknown letters and guessed letters.
-  createScreen = choice => {
-    let numOfChar = this.state.mysteryPhrase.length;
-    const correct_count = 0;
-    let phraseArray = [];
+  createScreen = (choice) => {
+    let buildArray = []; //used to build a array of "_" and letters
+    workingLetters += choice;//an accumulation of the user choices.
 
-    //for(var i = 0; i<numOfChar;i++){
-    //  if(choice == this.state.mysteryPhrase[i]){
+    //The outer for loop "I" check if the intended spot in the mystery phrase is a blank (if o adds to buildArray) and if the current buildArray spot is empty (if so add a "_"). The inner loop "J" checks if the intended spot in the mystery phrase is equal to any letter in the workingLetters string. If so, then add that letter to buildArray
+    for (var i = 0; i < this.state.mysteryPhrase.length; i++) {
+      for(var j=0;j<workingLetters.length;j++){
+        if(this.state.mysteryPhrase[i] == workingLetters[j]){
+          buildArray.push(workingLetters[j]);
+        }
+      }//end of j loop
+      if(this.state.mysteryPhrase[i] == " "){
+        buildArray.push(" ");
+      }
+      if(buildArray[i] == null || buildArray == undefined ){
+        buildArray.push("_");
+      }
+    }//end of i loop
 
-    // }
-    //}
+    //string used to update the guessedPhrase state
+    displayPhrase = buildArray.join(' ');
+    
+    this.setState({ guessedPhrase: displayPhrase });
+      
   };
 
   //method to change MainScreen to the InputData container with a method to pick a single letter
