@@ -25,6 +25,7 @@ export default class App extends React.Component {
       currentAwardAmount: 0, // the current random award amount the player can win for each letter they get correct
       currentScore: 0, //the current accumulation of the player score
       disableSpinWheel: false, //disable spin wheel when after player spin it
+      disablePickLetterButton: true, //disable button if the spin wheel is enable     
       showWheel: true,//show main screen's wheel and buttons, but hide letter input and phrase guessing
       showPickLetter: false,//show picking letter input screen, but hide spin wheel/buttons and phrase guessing
       showSolvePhrase: false,//show solve phrase input screen and button but hide spin wheel and pick letter screens
@@ -36,36 +37,64 @@ export default class App extends React.Component {
     this.createStartDisplay();
   }
 
-  //method to get player input, then switch back to the main screen 
+  //Update the currentScore state by adding the currentAwardAmount state to it for the number of times the letter appear in the mysteryPhrase state. If the player choice is not a letter in the mysteryPhrase, then wheel is enable and the pick a letter button disabled.
+  updateScore = (choice) =>{
+    let isWrongChoice = 0 //local variable to test if the "choice" is not a valid letter
+    for(var i=0;i<this.state.mysteryPhrase.length;i++){
+      if(this.state.mysteryPhrase[i] == choice){
+        this.setState(previousState => ({
+          currentScore: previousState.currentScore + this.state.currentAwardAmount
+        }));
+        isWrongChoice ++ 
+      }
+    }
+
+    if(isWrongChoice == 0){
+      this.enableWheel();
+    }   
+  }
+
+  //method to get player input, then switch back to the main screen, recreate the main display of known and unknown letters, and update the score based on number letters found. 
   playerPickedALetter = (choice) => {
     this.setState(previousState => ({
       letterChosen: choice,
     }));
-    this.updateUsedLetters(choice);
-    this.switchToMainScreen();
-    this.createScreen(choice);
+    this.updateUsedLetters(choice);//update the usedLetters component
+    this.switchToMainScreen();//switch from inputData to the mainScreen
+    this.createScreen(choice);//update the main display with "_" and letters
+    this.updateScore(choice);//update the score based on number of found letters
   }
 
-  //method use in the createRandomRewardAmount() in the spinWheel component to disable the spin wheel after the player push the button and get a ramdom reward amount
+  //method use in the createRandomRewardAmount() in the spinWheel component to disable the spin wheel after the player push the button and get a ramdom reward amount. The Pick a Letter button is enable when the wheel is disable and vise versa.
   disableWheel = () => {
     this.setState(previousState => ({
       disableSpinWheel: !previousState.disableSpinWheel,
     }));
+
+    this.setState(previousState => ({
+      disablePickLetterButton: !previousState.disablePickLetterButton,
+    }));    
   };
 
   //method use to enable the spin Wheel
-  enableWheel = () => {
+  enableWheel = () => {   
     this.setState(previousState => ({
       disableSpinWheel: !previousState.disableSpinWheel,
     }));
+
+    this.setState(previousState => ({
+      disablePickLetterButton: !previousState.disablePickLetterButton,
+    }));      
   };
 
-  //method use in the spinWheel compontent to get a random reward amount for the player between 100 and 1000.
+  //method use in the spinWheel compontent to get a random reward amount for the player between 100 and 1000. IF the random amount is 0 or 100, then it Bankrupt the player score and display bankrupt
   createRandomRewardAmount = () => {
     const randomAmount = Math.floor(Math.random() * 11) * 100;
 
-    //gets a new random amount if the spin wheel is not disabled.
-    if (!this.state.disableSpinWheel) {
+    if(randomAmount < 200){
+      this.setState(previousState => ({ currentAwardAmount: "Bankrupt" }));
+      this.setState(previousState => ({ currentScore: 0 }));
+    }else if(!this.state.disableSpinWheel) {
       this.setState(previousState => ({ currentAwardAmount: randomAmount }));
       this.disableWheel(); //disable the spin wheel after the user press the button
     }
@@ -167,6 +196,7 @@ export default class App extends React.Component {
         {this.state.showWheel &&
           <MainScreen
             disableSpinWheel={this.state.disableSpinWheel}
+            disablePickLetterButton={this.state.disablePickLetterButton}
             getRandomAmount={this.createRandomRewardAmount}
             rewardAmount={this.state.currentAwardAmount}
             score={this.state.currentScore}
@@ -194,7 +224,8 @@ function MainScreen(props){
       />
       <PlayerScore score={props.score} />
       <TouchableHighlight
-        onPress ={props.pickLetterScreen} 
+        onPress ={props.pickLetterScreen}
+        disabled={props.disablePickLetterButton} 
         style={styles.buttonStyle}>
         <Text style={styles.buttonText}>Pick a Letter</Text>
       </TouchableHighlight>
