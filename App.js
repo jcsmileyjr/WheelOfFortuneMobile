@@ -36,6 +36,17 @@ export default class App extends React.Component {
     this.createStartDisplay();
   }
 
+  //Update the currentScore state by adding the currentAwardAmount state to it for the number of times the letter appear in the mysteryPhrase state. 
+  updateScore = (choice) =>{
+    for(var i=0;i<this.state.mysteryPhrase.length;i++){
+      if(this.state.mysteryPhrase[i] == choice){
+        this.setState(previousState => ({
+          currentScore: previousState.currentScore + this.state.currentAwardAmount
+        })); 
+      }
+    }   
+  }
+
   //method to get player input, then switch back to the main screen 
   playerPickedALetter = (choice) => {
     this.setState(previousState => ({
@@ -44,6 +55,7 @@ export default class App extends React.Component {
     this.updateUsedLetters(choice);
     this.switchToMainScreen();
     this.createScreen(choice);
+    this.updateScore(choice);
   }
 
   //method use in the createRandomRewardAmount() in the spinWheel component to disable the spin wheel after the player push the button and get a ramdom reward amount
