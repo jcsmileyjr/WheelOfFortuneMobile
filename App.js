@@ -25,6 +25,7 @@ export default class App extends React.Component {
       currentAwardAmount: 0, // the current random award amount the player can win for each letter they get correct
       currentScore: 0, //the current accumulation of the player score
       disableSpinWheel: false, //disable spin wheel when after player spin it
+      disablePickLetterButton: true, //disable button if the spin wheel is enable     
       showWheel: true,//show main screen's wheel and buttons, but hide letter input and phrase guessing
       showPickLetter: false,//show picking letter input screen, but hide spin wheel/buttons and phrase guessing
       showSolvePhrase: false,//show solve phrase input screen and button but hide spin wheel and pick letter screens
@@ -58,11 +59,15 @@ export default class App extends React.Component {
     this.updateScore(choice);
   }
 
-  //method use in the createRandomRewardAmount() in the spinWheel component to disable the spin wheel after the player push the button and get a ramdom reward amount
+  //method use in the createRandomRewardAmount() in the spinWheel component to disable the spin wheel after the player push the button and get a ramdom reward amount. The Pick a Letter button is enable when the wheel is disable and vise versa.
   disableWheel = () => {
     this.setState(previousState => ({
       disableSpinWheel: !previousState.disableSpinWheel,
     }));
+
+    this.setState(previousState => ({
+      disablePickLetterButton: !previousState.disablePickLetterButton,
+    }));    
   };
 
   //method use to enable the spin Wheel
@@ -70,6 +75,10 @@ export default class App extends React.Component {
     this.setState(previousState => ({
       disableSpinWheel: !previousState.disableSpinWheel,
     }));
+
+    this.setState(previousState => ({
+      disablePickLetterButton: !previousState.disablePickLetterButton,
+    }));      
   };
 
   //method use in the spinWheel compontent to get a random reward amount for the player between 100 and 1000.
@@ -179,6 +188,7 @@ export default class App extends React.Component {
         {this.state.showWheel &&
           <MainScreen
             disableSpinWheel={this.state.disableSpinWheel}
+            disablePickLetterButton={this.state.disablePickLetterButton}
             getRandomAmount={this.createRandomRewardAmount}
             rewardAmount={this.state.currentAwardAmount}
             score={this.state.currentScore}
@@ -206,7 +216,8 @@ function MainScreen(props){
       />
       <PlayerScore score={props.score} />
       <TouchableHighlight
-        onPress ={props.pickLetterScreen} 
+        onPress ={props.pickLetterScreen}
+        disabled={props.disablePickLetterButton} 
         style={styles.buttonStyle}>
         <Text style={styles.buttonText}>Pick a Letter</Text>
       </TouchableHighlight>
