@@ -40,15 +40,28 @@ export default class App extends React.Component {
   //Update the currentScore state by adding the currentAwardAmount state to it for the number of times the letter appear in the mysteryPhrase state. If the player choice is not a letter in the mysteryPhrase, then wheel is enable and the pick a letter button disabled.
   updateScore = (choice) =>{
     let isWrongChoice = 0 //local variable to test if the "choice" is not a valid letter
+
+    const testIfVowel = /[aeiou]/gi;  //use a reg expression to utilize the vowels
+    const checkIfVowel = choice.match(testIfVowel);//if a null then its not a vowel. 
+
+    //If the player choice is a valid letter and the letter is not a vowel then current award is added tot the score. If the player choice is a vowel then -$250 per letter is extracted. If its not a valid choice then the spin wheel is reenabled. 
     for(var i=0;i<this.state.mysteryPhrase.length;i++){
       if(this.state.mysteryPhrase[i] == choice){
-        this.setState(previousState => ({
-          currentScore: previousState.currentScore + this.state.currentAwardAmount
-        }));
-        isWrongChoice ++ 
+        if(checkIfVowel == null){
+          this.setState(previousState => ({
+            currentScore: previousState.currentScore + this.state.currentAwardAmount
+          }));
+        }else {
+          this.setState(previousState => ({
+            currentScore: previousState.currentScore - 250
+          }));            
+        }
+
+        isWrongChoice ++ //keep track of correct choices. if its 0, then player lose turn
       }
     }
 
+    //Check if the player has any correct guessed letters. If none then the variable will be zero and then the wheel is enable. 
     if(isWrongChoice == 0){
       this.enableWheel();
     }   
