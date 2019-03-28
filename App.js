@@ -29,7 +29,7 @@ export default class App extends React.Component {
       showWheel: true,//show main screen's wheel and buttons, but hide letter input and phrase guessing
       showPickLetter: false,//show picking letter input screen, but hide spin wheel/buttons and phrase guessing
       showSolvePhrase: false,//show solve phrase input screen and button but hide spin wheel and pick letter screens
-      letterChosen: "Bob", //letter chosen via the InputData component
+      phraseChosen: "", //phrase chosen via the InputData component
     };
   }
 
@@ -69,13 +69,41 @@ export default class App extends React.Component {
 
   //method to get player input, then switch back to the main screen, recreate the main display of known and unknown letters, and update the score based on number letters found. 
   playerPickedALetter = (choice) => {
-    this.setState(previousState => ({
-      letterChosen: choice,
-    }));
-    this.updateUsedLetters(choice);//update the usedLetters component
+    
+    const lowerCaseChoice = choice.toLowerCase();
+    this.updateUsedLetters(lowerCaseChoice);//update the usedLetters component
     this.switchToMainScreen();//switch from inputData to the mainScreen
-    this.createScreen(choice);//update the main display with "_" and letters
-    this.updateScore(choice);//update the score based on number of found letters
+    this.createScreen(lowerCaseChoice);//update the main display with "_" and letters
+    this.updateScore(lowerCaseChoice);//update the score based on number of found letters
+  }
+  //combines each letter of the player's to create a phrase to use to solve the game.
+  playerSolvePhrase = (playerguess) => {
+
+    const lowerCaseGuess = playerguess.toLowerCase(); //lower case each leter
+
+    //set the state for the guess phrase
+    this.setState(previousState => ({
+      phraseChosen: lowerCaseGuess,
+    }));      
+  }
+
+  //check if the player phrase is correct. If so then update the main display and change the spin wheel text to Win. IF its  not correct, change wheel text to lose. Either way, switch to main screen
+  checkSolvePhrase = () =>{
+    if(this.state.phraseChosen == this.state.mysteryPhrase.toLowerCase()){      
+      this.setState(previousState => ({
+        guessedPhrase: this.state.phraseChosen,
+      }));
+
+      this.setState(previousState => ({
+        currentAwardAmount: "WIN",
+      }));              
+    }else {
+      this.setState(previousState => ({
+        currentAwardAmount: "LOSE",
+      }));       
+    }
+    
+    this.switchToMainScreen();//switch from inputData to the mainScreen    
   }
 
   //method use in the createRandomRewardAmount() in the spinWheel component to disable the spin wheel after the player push the button and get a ramdom reward amount. The Pick a Letter button is enable when the wheel is disable and vise versa.
@@ -135,15 +163,16 @@ export default class App extends React.Component {
 
     for (var i = 0; i < this.state.mysteryPhrase.length; i++) {
       if (this.state.mysteryPhrase[i] == ' ') {
-        buildArray.push(' ');
+        buildArray.push(' ');//check if its a space, if so then add a space
       } else {
-        buildArray.push('_');
+        buildArray.push('_'); //if not a space then add a "_"
       }
     }
 
     //string used to update the guessedPhrase state
     displayPhrase = buildArray.join(' ');
 
+    //updated the state with the string converted from an array
     this.setState({ guessedPhrase: displayPhrase });
     
   };
@@ -171,11 +200,27 @@ export default class App extends React.Component {
     //string used to update the guessedPhrase state
     displayPhrase = buildArray.join(' ');
     
+    //updated the state with the string converted from an array
     this.setState({ guessedPhrase: displayPhrase });
       
   };
 
-  //method to change MainScreen to the InputData container with a method to pick a single letter
+  //method to change MainScreen to the InputData container with a method to solve the phrase
+  switchToSolvePhraseScreen = () => {
+      this.setState(previousState => ({
+        showWheel: false,
+      }));
+
+      this.setState(previousState => ({
+        showPickLetter: false,
+      }));  
+
+      this.setState(previousState => ({
+        showSolvePhrase: true,
+      }));                  
+  }
+
+  //method to change MainScreen to the InputData container with a method to pick a single letter or solve phrase
   switchToPickLetterScreen = () => {
       this.setState(previousState => ({
         showWheel: false,
@@ -183,8 +228,12 @@ export default class App extends React.Component {
 
       this.setState(previousState => ({
         showPickLetter: true,
-      }));              
-  }
+      }));  
+
+      this.setState(previousState => ({
+        showSolvePhrase: false,
+      }));                  
+  }  
 
   //method to change to MainScreen from InputData container with a method to pick a single letter
   switchToMainScreen = () => {
@@ -194,7 +243,11 @@ export default class App extends React.Component {
 
       this.setState(previousState => ({
         showPickLetter: false,
-      }));              
+      }));
+
+      this.setState(previousState => ({
+        showSolvePhrase: false,
+      }));                         
   }  
 
    render() {
@@ -204,7 +257,7 @@ export default class App extends React.Component {
           <Text style={styles.wofTitle}>Wheel of Fortune</Text>
           <Text style={styles.codeEditionTitle}>Coding Edition</Text>
         </View>
-        <MainDisplay displayLetters={displayPhrase} />
+        <MainDisplay displayLetters={this.state.guessedPhrase} />
         <UsedLetters usedLetters={this.state.usedLetters} />
         {this.state.showWheel &&
           <MainScreen
@@ -215,13 +268,23 @@ export default class App extends React.Component {
             score={this.state.currentScore}
             enable = {this.enableWheel}
             pickLetterScreen ={this.switchToPickLetterScreen}
+            solvePhraseScreen = {this.switchToSolvePhraseScreen}
           />
         }
         {this.state.showPickLetter &&
           <InputData 
+              instructions = "Input a Letter"
               letterPicked = {this.playerPickedALetter}
+              solvePhrase = {this.checkSolvePhrase}
               numOfLettersAllowed = {1} />
         }
+        {this.state.showSolvePhrase &&
+          <InputData
+              instructions = "Solve the Phrase" 
+              letterPicked = {this.playerSolvePhrase}
+              solvePhrase = {this.checkSolvePhrase}
+              numOfLettersAllowed = {30} />
+        }        
       </View>
     );
   }
@@ -242,7 +305,9 @@ function MainScreen(props){
         style={styles.buttonStyle}>
         <Text style={styles.buttonText}>Pick a Letter</Text>
       </TouchableHighlight>
-      <TouchableHighlight style={styles.buttonStyle}>
+      <TouchableHighlight
+        onPress ={props.solvePhraseScreen} 
+        style={styles.buttonStyle}>
         <Text style={styles.buttonText}>Solve Phrase</Text>
       </TouchableHighlight>
       <TouchableHighlight

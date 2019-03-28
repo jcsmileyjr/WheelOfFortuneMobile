@@ -13,7 +13,7 @@ export default function InputData(props) {
   return(
     <View style={styles.container}>
       <View style={styles.buttonView}> 
-      <Text style={styles.inputTitle}>Input a Letter</Text>
+      <Text style={styles.inputTitle}>{props.instructions}</Text>
       <TextInput
         style={{height: 40, 
                 width:200,
@@ -29,7 +29,7 @@ export default function InputData(props) {
       </View>      
       <View style={styles.buttonView}> 
         <TouchableHighlight
-          //onPress={}
+          onPress={()=> props.solvePhrase()}
           style={styles.buttonStyle}>
           <Text style={styles.buttonText}>Submit</Text>
         </TouchableHighlight>
