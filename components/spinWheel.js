@@ -17,7 +17,7 @@ export default class SpinWheel extends React.Component {
         <TouchableHighlight
           disabled = {this.props.disableSpinwheel}
           onPress={this.props.getRandomAmount} 
-          style={styles.wheel}>
+          style={ [styles.wheel, {backgroundColor:this.props.newColor}]}>
           <Text style={styles.awardText}>{this.props.rewardAmount}</Text>
         </TouchableHighlight>
       </View>
@@ -36,7 +36,7 @@ const styles = StyleSheet.create({
   },
   wheel:{
     //flex: 1,
-    backgroundColor:colors[0],
+    //backgroundColor:{props.newColor},
     borderRadius:100,
     width: 175,
     height: 175, 

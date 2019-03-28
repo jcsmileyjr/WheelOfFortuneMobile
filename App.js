@@ -30,6 +30,7 @@ export default class App extends React.Component {
       showPickLetter: false,//show picking letter input screen, but hide spin wheel/buttons and phrase guessing
       showSolvePhrase: false,//show solve phrase input screen and button but hide spin wheel and pick letter screens
       phraseChosen: "", //phrase chosen via the InputData component
+      currentColor: "lightblue"//use to simulate spinning of wheel by changing colors
     };
   }
 
@@ -128,8 +129,37 @@ export default class App extends React.Component {
     }));      
   };
 
+  //simulate the wheel as spinning with color change and amounts changing when the user press the wheel. Called in the createRandomRewardAmount()
+  simulateSpinningWheel = (callback) => {
+    //array of colors
+    const colors = ["pink", "red", "orange", "blue","green", "lightblue", "lightblue" ];
+    let showColor = 0;//use to iterate through colors array
+
+    //if the wheel is disable then don't spin it
+    if(!this.state.disableSpinWheel){
+      // repeat with the interval of 2 seconds to choose a new color from colors array
+      let timerId = setInterval(() => 
+        {
+          this.setState(previousState => ({
+            currentColor: colors[showColor],  //update the state by changing the color
+          })); 
+          showColor++; //get a new index so a new color is selected
+          this.setState(previousState => ({ currentAwardAmount: showColor * 100 }));
+        }
+        , 1000);
+
+      // Clear the interval timer and set the random award amount
+      setTimeout(() => { 
+          clearInterval(timerId); //use the timer id  to clear the interval
+          //showColor = 0;
+          this.createRandomRewardAmount(); 
+        }, 7000);  
+    }
+  }
+
   //method use in the spinWheel compontent to get a random reward amount for the player between 100 and 1000. IF the random amount is 0 or 100, then it Bankrupt the player score and display bankrupt
   createRandomRewardAmount = () => {
+
     const randomAmount = Math.floor(Math.random() * 11) * 100;
 
     if(randomAmount < 200){
@@ -263,12 +293,13 @@ export default class App extends React.Component {
           <MainScreen
             disableSpinWheel={this.state.disableSpinWheel}
             disablePickLetterButton={this.state.disablePickLetterButton}
-            getRandomAmount={this.createRandomRewardAmount}
+            getRandomAmount={this.simulateSpinningWheel}
             rewardAmount={this.state.currentAwardAmount}
             score={this.state.currentScore}
             enable = {this.enableWheel}
             pickLetterScreen ={this.switchToPickLetterScreen}
             solvePhraseScreen = {this.switchToSolvePhraseScreen}
+            newColor = {this.state.currentColor}
           />
         }
         {this.state.showPickLetter &&
@@ -297,6 +328,7 @@ function MainScreen(props){
         disableSpinWheel={props.disableSpinWheel}
         getRandomAmount={props.getRandomAmount}
         rewardAmount={props.rewardAmount}
+        newColor = {props.newColor}
       />
       <PlayerScore score={props.score} />
       <TouchableHighlight
