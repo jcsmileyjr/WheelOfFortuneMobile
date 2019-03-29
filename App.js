@@ -8,6 +8,7 @@ import SpinWheel from './components/spinWheel';
 import PlayerScore from './components/playerScore';
 import PickALetterInput from './components/pickALetterInput.js';
 import InputData from './components/inputData.js';
+import Instructions from './components/instructions.js';
 
 let displayPhrase = ''; //global variable to hold updated phrase with known letters and unknown letters with "_". Used in the createStartDisplay() to help start the web app.
 
@@ -331,6 +332,7 @@ function MainScreen(props){
         newColor = {props.newColor}
       />
       <PlayerScore score={props.score} />
+      <Instructions disableSpinWheel={props.disableSpinWheel} />          
       <TouchableHighlight
         onPress ={props.pickLetterScreen}
         disabled={props.disablePickLetterButton} 
@@ -341,12 +343,7 @@ function MainScreen(props){
         onPress ={props.solvePhraseScreen} 
         style={styles.buttonStyle}>
         <Text style={styles.buttonText}>Solve Phrase</Text>
-      </TouchableHighlight>
-      <TouchableHighlight
-        onPress={props.enable}
-        style={styles.buttonStyle}>
-        <Text style={styles.buttonText}>Show Rules</Text>
-      </TouchableHighlight>    
+      </TouchableHighlight>  
     </View>
   );
 }
@@ -389,6 +386,7 @@ const styles = StyleSheet.create({
   mainScreenContainer:{
     flex: 4,
     display: "flex",
-
-  }
+    justifyContent: 'center',
+    alignItems: 'center',    
+  }  
 });
