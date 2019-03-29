@@ -14,13 +14,14 @@ let displayPhrase = ''; //global variable to hold updated phrase with known lett
 
 let workingLetters = ""; //global variable used in the createScreen() to accumulate the player letters
 
+//used in the updateUseLetters() to update the UseLetters Component from a intro text to the actural letters chosen by the player
 let startUnusedLetterComponent = false;
 
 export default class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      mysteryPhrase: 'launch code rocks', //official phrase to be answered
+      mysteryPhrase: 'breaking into tech', //official phrase to be answered
       guessedPhrase: '', //matches the offiail phrase but consist of "_" where the player hasn't guessed.
       usedLetters: 'No Unused Letters', //string of letters already used by player
       currentAwardAmount: 0, // the current random award amount the player can win for each letter they get correct
