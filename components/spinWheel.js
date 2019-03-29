@@ -18,7 +18,10 @@ export default class SpinWheel extends React.Component {
           disabled = {this.props.disableSpinwheel}
           onPress={this.props.getRandomAmount} 
           style={ [styles.wheel, {backgroundColor:this.props.newColor}]}>
-          <Text style={styles.awardText}>{this.props.rewardAmount}</Text>
+            {this.props.rewardAmount > 0 || this.props.rewardAmount =="LOSE" || this.props.rewardAmount == "WIN" ?
+            (<Text style={styles.awardText}>{this.props.rewardAmount}</Text>):
+              (<Text style={styles.awardText}>Push to Spin</Text>)                     
+            }  
         </TouchableHighlight>
       </View>
     );
